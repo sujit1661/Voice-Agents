@@ -1,117 +1,372 @@
-# Groq Voice Agent
+# Groq Voice Agent — CMD Edition
 
-A real-time voice assistant + text chat CLI built with **LiveKit Agents 1.5** and **Groq AI**.
+A lightweight command-line voice assistant that runs locally on your computer.
 
-## Stack
+It uses:
 
-| Layer | Provider | Model |
-|-------|----------|-------|
-| STT   | Groq Whisper | `whisper-large-v3` |
-| LLM   | Groq Llama  | `llama-3.3-70b-versatile` |
-| TTS   | Groq PlayAI | `playai-tts` |
-| VAD   | Silero      | built-in |
+* 🎤 Microphone Input (`sounddevice`)
+* 📝 Speech-to-Text via Groq Whisper
+* 🤖 AI Responses via Groq Llama Models
+* 🔊 Text-to-Speech via Windows Built-in Voices (`pyttsx3`)
 
----
-
-## Quick start
-
-### 1. Fill in `.env.local`
-
-```
-LIVEKIT_URL=wss://your-project.livekit.cloud   # only needed for voice mode
-LIVEKIT_API_KEY=your_livekit_api_key           # only needed for voice mode
-LIVEKIT_API_SECRET=your_livekit_api_secret     # only needed for voice mode
-GROQ_API_KEY=your_groq_api_key                 # required for all modes
-```
-
-- Groq key (free): https://console.groq.com/keys
-- LiveKit Cloud (free): https://cloud.livekit.io
-
-### 2. Install
-
-```cmd
-uv sync
-```
-
-### 3. Pick your interface
+No LiveKit, no browser, no extra cloud voice services required.
 
 ---
 
-## Interface options
+# Features
 
-### Option A — Text chat in CMD (no mic, no LiveKit needed)
+* Voice conversations from the terminal
+* Fast speech recognition using Groq Whisper
+* Natural AI responses using Groq LLMs
+* Windows offline text-to-speech
+* Conversation memory during the session
+* Supports different Groq models
+* Supports multiple Windows voices
 
-Just type and chat. Responses stream token-by-token.
+---
 
-```cmd
-python src/chat.py
-```
+# Demo Flow
 
-Options:
-```cmd
-python src/chat.py --model llama-3.1-8b-instant
-python src/chat.py --system "You are a Python tutor."
-```
-
-In-chat commands:
-```
-/clear          clear conversation history
-/model <name>   switch model on the fly
-/help           show help
-/exit           quit
+```text
+You Speak
+    ↓
+Microphone Recording
+    ↓
+Groq Whisper STT
+    ↓
+User Text
+    ↓
+Groq Llama Model
+    ↓
+AI Response
+    ↓
+Windows TTS
+    ↓
+Audio Output
 ```
 
 ---
 
-### Option B — Voice in terminal (mic + speakers, no browser)
+# Requirements
 
-Talk to the agent using your microphone. Audio plays back through your speakers.
-No LiveKit Cloud account needed for this mode.
-
-```cmd
-uv run python -m livekit.agents download-files
-python src/agent.py console
-```
-
-Press `Ctrl+C` to stop.
+* Python 3.10+
+* Windows (recommended)
+* Working microphone
+* Groq API Key
 
 ---
 
-### Option C — Voice via browser (LiveKit Cloud)
+# Installation
 
-Connect the agent to LiveKit Cloud and talk through the Agent Console web UI.
+## 1. Clone the Repository
 
-```cmd
-python src/agent.py dev
+```bash
+git clone https://github.com/yourusername/groq-voice-agent.git
+
+cd groq-voice-agent
 ```
-
-Then open https://cloud.livekit.io → your project → **Agents** → **Start a session**.
 
 ---
 
-## Model options
+## 2. Create Virtual Environment
 
-| Model | Speed | Best for |
-|-------|-------|----------|
-| `llama-3.3-70b-versatile` | fast | default, most capable |
-| `llama-3.1-8b-instant` | fastest | quick answers, lower cost |
-| `llama3-70b-8192` | fast | long conversations |
-| `gemma2-9b-it` | fast | lightweight alternative |
+```bash
+python -m venv venv
+```
 
-STT alternatives:
-- `whisper-large-v3-turbo` — faster, slightly less accurate
-- `distil-whisper-large-v3-en` — English only, cheapest
+Activate:
+
+```bash
+venv\Scripts\activate
+```
 
 ---
 
-## Project structure
+## 3. Install Dependencies
 
+```bash
+pip install -r requirements.txt
 ```
-.
-├── src/
-│   ├── agent.py    — LiveKit voice agent (console / dev / start modes)
-│   └── chat.py     — Standalone text chat CLI (Groq only, no LiveKit)
-├── .env.local      — API keys (never commit this)
-├── pyproject.toml  — Dependencies
+
+or
+
+```bash
+pip install groq python-dotenv sounddevice soundfile numpy pyttsx3
+```
+
+---
+
+# Project Structure
+
+```text
+groq-voice-agent/
+│
+├── voice.py
+├── .env.local
+├── requirements.txt
 └── README.md
 ```
+
+---
+
+# Environment Variables
+
+Create a file named:
+
+```text
+.env.local
+```
+
+Add your Groq API key:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+You can get a key from:
+
+[https://console.groq.com](https://console.groq.com)
+
+---
+
+# Running the Assistant
+
+Default:
+
+```bash
+python voice.py
+```
+
+---
+
+Use a Different LLM Model
+
+```bash
+python voice.py --model llama-3.1-8b-instant
+```
+
+Example:
+
+```bash
+python voice.py --model llama-3.3-70b-versatile
+```
+
+---
+
+Use a Different Voice
+
+```bash
+python voice.py --voice 1
+```
+
+```bash
+python voice.py --voice 2
+```
+
+```bash
+python voice.py --voice 3
+```
+
+---
+
+# Controls
+
+Start Conversation:
+
+```text
+Press Enter
+```
+
+Stop Recording:
+
+```text
+Press Enter
+```
+
+Quit:
+
+```text
+q + Enter
+```
+
+---
+
+# Supported Models
+
+Examples of Groq models:
+
+```text
+llama-3.3-70b-versatile
+llama-3.1-8b-instant
+llama-3.1-70b-versatile
+```
+
+You can replace the model name using:
+
+```bash
+--model
+```
+
+---
+
+# How It Works
+
+## Recording
+
+Audio is captured from the microphone at:
+
+```text
+16kHz
+Mono Channel
+16-bit PCM
+```
+
+---
+
+## Speech Recognition
+
+Audio is sent to Groq Whisper:
+
+```python
+whisper-large-v3-turbo
+```
+
+which converts speech into text.
+
+---
+
+## AI Processing
+
+Conversation history is maintained in memory:
+
+```python
+history = [
+    {"role": "system", "content": SYSTEM_PROMPT}
+]
+```
+
+Each user message and AI response is appended to the history so the assistant remembers context during the session.
+
+---
+
+## Text-to-Speech
+
+The assistant uses:
+
+```python
+pyttsx3
+```
+
+which relies on Windows built-in speech synthesis.
+
+No external TTS APIs are required.
+
+---
+
+# Example Conversation
+
+```text
+[ Press Enter to speak ]
+
+You:
+What is machine learning?
+
+Agent:
+Machine learning is a branch of artificial intelligence that enables computers to learn patterns from data and make predictions without being explicitly programmed.
+
+[ Press Enter to speak ]
+```
+
+---
+
+# Troubleshooting
+
+## No Microphone Found
+
+Check available devices:
+
+```python
+import sounddevice as sd
+
+print(sd.query_devices())
+```
+
+Make sure a microphone is connected and enabled.
+
+---
+
+## GROQ_API_KEY Not Set
+
+Error:
+
+```text
+ERROR: GROQ_API_KEY not set in .env.local
+```
+
+Solution:
+
+```env
+GROQ_API_KEY=your_key_here
+```
+
+---
+
+## pyttsx3 Not Speaking
+
+Try:
+
+```bash
+pip install pyttsx3
+```
+
+Also verify that Windows Speech Services are installed.
+
+---
+
+## Audio Not Recording
+
+Install PortAudio support:
+
+```bash
+pip install sounddevice
+```
+
+If issues persist:
+
+```bash
+pip install pipwin
+pipwin install pyaudio
+```
+
+---
+
+# Future Improvements
+
+* Voice activity detection (VAD)
+* Wake word support
+* Streaming responses
+* Real-time transcription
+* Multi-language support
+* GUI version using Streamlit
+* Local LLM support via Ollama
+* Voice cloning support
+* RAG integration
+* Tool calling and web search
+
+---
+
+# License
+
+MIT License
+
+---
+
+# Acknowledgements
+
+* [Groq](https://groq.com?utm_source=chatgpt.com)
+* [Whisper](https://openai.com/research/whisper?utm_source=chatgpt.com)
+* [pyttsx3](https://pyttsx3.readthedocs.io/en/latest/?utm_source=chatgpt.com)
+* [SoundDevice](https://python-sounddevice.readthedocs.io/?utm_source=chatgpt.com)
+* [NumPy](https://numpy.org/?utm_source=chatgpt.com)
+
+Built with Python, Groq, Whisper, and Windows TTS.

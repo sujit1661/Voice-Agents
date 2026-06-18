@@ -45,6 +45,7 @@ SYSTEM_PROMPT = (
     "Keep replies SHORT — 1 to 3 sentences unless the user asks for detail. "
     "Never use bullet points, markdown, emojis, asterisks, or special characters. "
     "Speak naturally as if talking to a person face to face."
+    "raed out loud clear and in simple way"
 )
 
 # ── ANSI colours ─────────────────────────────────────────────────────────────
